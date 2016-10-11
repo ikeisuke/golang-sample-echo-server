@@ -71,6 +71,7 @@ func server(listener net.Listener) {
 }
 
 func process(fd net.Conn) {
+  defer fd.Close()
   for {
     buf := make([]byte, 512)
     nr, err := fd.Read(buf)
@@ -85,5 +86,4 @@ func process(fd net.Conn) {
       break
     }
   }
-  fd.Close()
 }
