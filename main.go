@@ -29,11 +29,16 @@ func main() {
     }
   }()
   server := NewServer()
-  server.Open(socket)
+  if err := server.Open(socket); err != nil {
+    log.Printf("error: %v\n", err)
+    return;
+  }
   registerShutdown(server)
   fmt.Printf("GOLANG_SAMPLE_SOCK=%v;export GOLANG_SAMPLE_SOCK;\n", socket)
   fmt.Printf("GOLANG_SAMPLE_PID=%v;export GOLANG_SAMPLE_PID;\n", pid)
-  server.Start()
+  if err := server.Start(); err != nil {
+    log.Printf("error: %v\n", err)
+  }
 }
 
 func registerShutdown(server *Server) {
@@ -53,6 +58,8 @@ func registerShutdown(server *Server) {
       }
       break
     }
-    server.Close()
+    if err := server.Close(); err != nil {
+      log.Printf("error: %v\n", err)
+    }
   }()
 }

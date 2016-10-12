@@ -19,20 +19,18 @@ func NewServer() *Server{
 func (s *Server) Open(socket string) {
   listener, err := net.Listen("unix", socket)
   if err != nil {
-    log.Printf("error: %v\n", err)
-    return
+    return err
   }
   s.listener = listener;
   if err := os.Chmod(socket, 0600); err != nil {
-    log.Printf("error: %v\n", err)
     s.Close()
-    return
+    return err
   }
 }
 
 func (s *Server) Close() {
   if err := s.listener.Close(); err != nil {
-    log.Printf("error: %v\n", err)
+    return err;
   }
 }
 
@@ -58,8 +56,7 @@ func (s *Server) Process(fd net.Conn) {
     fmt.Printf("Recieved: %v", string(data));
     _, err = fd.Write(data)
     if err != nil {
-      log.Printf("error: %v\n", err)
-      break
+      return err
     }
   }
 }
