@@ -36,9 +36,7 @@ func main() {
   registerShutdown(server)
   fmt.Printf("GOLANG_SAMPLE_SOCK=%v;export GOLANG_SAMPLE_SOCK;\n", socket)
   fmt.Printf("GOLANG_SAMPLE_PID=%v;export GOLANG_SAMPLE_PID;\n", pid)
-  if err := server.Start(); err != nil {
-    log.Printf("error: %v\n", err)
-  }
+  server.Start();
 }
 
 func registerShutdown(server *Server) {

@@ -2,7 +2,6 @@ package main
 
 import (
   "net"
-  "log"
   "os"
   "fmt"
 )
@@ -16,7 +15,7 @@ func NewServer() *Server{
   return s;
 }
 
-func (s *Server) Open(socket string) {
+func (s *Server) Open(socket string) error {
   listener, err := net.Listen("unix", socket)
   if err != nil {
     return err
@@ -26,25 +25,27 @@ func (s *Server) Open(socket string) {
     s.Close()
     return err
   }
+  return nil
 }
 
-func (s *Server) Close() {
+func (s *Server) Close() error{
   if err := s.listener.Close(); err != nil {
     return err;
   }
+  return nil
 }
 
 func (s *Server) Start() {
   for {
     fd, err := s.listener.Accept()
     if err != nil {
-      return
+      break;
     }
     go s.Process(fd)
   }
 }
 
-func (s *Server) Process(fd net.Conn) {
+func (s *Server) Process(fd net.Conn) error{
   defer fd.Close()
   for {
     buf := make([]byte, 512)
@@ -59,4 +60,5 @@ func (s *Server) Process(fd net.Conn) {
       return err
     }
   }
+  return nil
 }
